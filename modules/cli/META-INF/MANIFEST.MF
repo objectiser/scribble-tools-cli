@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Scribble Command Line
+Bundle-SymbolicName: org.scribble.commandline
+Bundle-Version: 2.0.0.20110303-M4
+Bundle-ClassPath: scribble-command-line.jar
+Export-Package: 
+Bundle-Vendor: www.scribble.org
+Bundle-Activator: org.scribble.commandline.osgi.HostActivator

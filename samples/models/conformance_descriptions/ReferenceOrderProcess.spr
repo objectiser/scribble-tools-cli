@@ -1,0 +1,7 @@
+import Order;
+
+protocol ReferenceOrderProcess {
+	role Buyer, Seller;
+
+	Order from Buyer to Seller;
+}

@@ -1,0 +1,99 @@
+Scribble 2.0.0.M4
+=================
+
+This release includes some model simplifications following the removal of the old
+conformance checking implementation, which was unnecessarily complex.
+
+The other reason for this release is to act as a stable baseline for the Savara 2.0.0.M1
+release, and also in preparation for the migration to github.
+
+The details for this release can be found here:
+https://issues.jboss.org/secure/ReleaseNote.jspa?projectId=12311020&version=12315127
+
+
+Scribble 2.0.0.M3
+=================
+
+This release contains a number of bug fixes and slight changes to the notation.
+
+The details for this release can be found here:
+https://issues.jboss.org/secure/ReleaseNote.jspa?projectId=12311020&version=12315989
+
+
+Scribble 2.0.0.M2
+=================
+
+This release includes some changes to the protocol notation:
+
+a) Recursion has changed to:
+rec <label> {
+	...
+	<label>;
+}
+
+This change has also resulted in the renaming of the LabelledBlock model object to RecBlock.
+
+b) Import has changed to:
+import <typeSystem> "<type>" as <alias> ( , "<type>" as <alias> )* from "<location>";
+
+as well as the simple form, e.g. import <type>,<type>....;
+
+c) A new 'unordered' construct
+
+d) The choice construct has changed syntax to:
+choice from <role> to <role> {
+    <message signature>:
+        ...
+    <message signature>:
+        ...
+}
+
+e) The protocol/run syntax has changed in the way in deals with parameter passing. The
+protocol now defines the set of parameter definitions, and the parameter values will be
+passed by value based on position (in this release the binding/assignment approach is still
+being used to define the parameter values being passed).
+
+As part of this change, the current Parameter class has been renamed to ParameterDefinition,
+and DeclarationBinding renamed to Parameter.
+
+The details for this release can be found here:
+https://jira.jboss.org/secure/ReleaseNote.jspa?projectId=12311020&version=12315749
+
+
+Scribble 2.0.0.M1
+=================
+
+This is the first milestone release for version 2 of the Scribble Language and Tooling.
+
+This version of the language has focused on defining a core set of constructs that can
+representation a wide range of communication protocols between multiple parties. These
+constructs are also supported by theory, enabling a greater level of validation techniques
+to be applied over time.
+
+This initial release provides Java based tooling in the following areas:
+
+- a parser for the type language (assertion support will be available soon)
+- a subset of the language validation rules
+- an endpoint projection implementation
+- a conformance checking implementation for verifying a local model against a global model
+- exporting a protocol object model to textual representation
+- exporting a model to a finite state machine representation used for monitoring
+- a protocol monitor
+
+The capabilities can be used in two environments:
+
+1) Command line environment - this is available in the main distribution available on the
+Scribble downloads page. This distribution also contains all the required Jars, which can
+then be linked into any application for embedded use of Scribble tooling, as well as the
+samples which can be imported into the following Eclipse environment.
+
+2) Eclipse - the capabilities can also be installed as Eclipse plugins using the update
+site specified on the Scribble downloads page.
+
+NOTE: Currently only the parser and validation modules are directly used in the Eclipse
+environment, triggered when a Scribble protocol file (with extension .spr) is created or
+modified.
+
+The details for this release can be found here:
+https://jira.jboss.org/secure/ReleaseNote.jspa?projectId=12311020&version=12315126
+
