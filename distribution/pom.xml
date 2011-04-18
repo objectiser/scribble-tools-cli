@@ -51,8 +51,8 @@
       <version>${antlr.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.scribble.runtime.cli</groupId>
-      <artifactId>scribble-commandline</artifactId>
+      <groupId>org.scribble.modules</groupId>
+      <artifactId>org.scribble.cli</artifactId>
       <version>${scribble.version}</version>
     </dependency>
     <dependency>
