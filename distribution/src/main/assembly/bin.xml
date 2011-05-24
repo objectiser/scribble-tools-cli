@@ -96,8 +96,7 @@
             <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
             <includes>
             	<include>org.scribble.bundles:*</include>
-            	<include>org.scribble.runtime.cli:scribble-commands</include>
-            	<include>org.apache.felix:org.apache.felix.scr</include>
+             	<include>org.apache.felix:org.apache.felix.scr</include>
                 <include>org.osgi:org.osgi.compendium</include>
             </includes>
         </dependencySet>
@@ -109,7 +108,7 @@
                <include>org.apache.felix:org.apache.felix.framework</include>
                <include>org.apache.felix:org.apache.felix.main</include>
                <include>org.apache.activemq:activemq-all</include>
-               <include>org.scribble.runtime.cli:scribble-commandline</include>
+               <include>org.scribble.modules:org.scribble.cli</include>
                <include>org.antlr:antlr-runtime</include> 
              </includes>
         </dependencySet>
