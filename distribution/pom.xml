@@ -108,7 +108,7 @@
                   <goal>single</goal>
                 </goals>
                 <configuration>
-                  <finalName>scribble-${project.version}</finalName>
+                  <finalName>scribble-tools-cli-${project.version}</finalName>
                   <appendAssemblyId>false</appendAssemblyId>
                   <descriptors>
                     <descriptor>src/main/assembly/bin.xml</descriptor>
