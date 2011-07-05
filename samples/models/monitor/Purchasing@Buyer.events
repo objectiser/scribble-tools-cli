@@ -1,4 +1,3 @@
-sendMessage,Order,Broker
-receiveChoice,_Confirmation,Broker
-receiveMessage,Confirmation,Broker
+send,Order,Broker
+receive,Confirmation,Broker
 

@@ -1,7 +1,6 @@
 import MyOrder;
 
-protocol OrderProcess {
-	role Buyer, Seller;
+protocol OrderProcess (role Buyer, role Seller) {
 
 	MyOrder from Buyer to Seller;
 }

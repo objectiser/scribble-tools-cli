@@ -5,16 +5,15 @@ import InsufficientCredit;
 import Confirmation;
 import OutOfStock;
 
-protocol Purchasing@Buyer {
-	role Broker;
+protocol Purchasing@Buyer (role Broker) {
 
 	Order to Broker;
 	
-	choice from Broker {
-		Confirmation:
-		
-		OutOfStock:
-		
-		InsufficientCredit:
+	choice {
+		Confirmation from Broker;
+	} or {
+		OutOfStock from Broker;
+	} or {
+		InsufficientCredit from Broker;
 	}
 }
