@@ -1,3 +1,15 @@
+Scribble 2.0.0.M6
+=================
+
+This release contains updates to the protocol syntax ready for version 1 of the
+protocol syntax. Some issues remain to be resolved, but contains the major changes,
+including two forms of choice syntax, and the 'introduces' approach and role parameter
+passing, rather than role lists.
+
+The details for this release can be found here:
+https://issues.jboss.org/secure/ReleaseNote.jspa?projectId=12311020&version=12316423
+
+
 Scribble 2.0.0.M4
 =================
 
