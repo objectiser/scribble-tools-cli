@@ -1,7 +1,0 @@
-import MyOrder;
-
-protocol OrderProcess {
-	role Buyer, Seller;
-
-	MyOrder from Buyer to Seller;
-}

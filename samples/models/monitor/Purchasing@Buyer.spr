@@ -5,7 +5,7 @@ import InsufficientCredit;
 import Confirmation;
 import OutOfStock;
 
-protocol Purchasing@Buyer (role Broker) {
+protocol Purchasing at Buyer (role Broker) {
 
 	Order to Broker;
 	

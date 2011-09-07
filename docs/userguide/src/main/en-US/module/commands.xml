@@ -206,8 +206,7 @@ bin/project.sh samples/models/parse_and_validate/OrderProcess.spr Seller
 		<informalexample>
 			<programlisting>
 import MyOrder;
-protocol OrderProcess @ Seller {
-	role Buyer;
+protocol OrderProcess at Seller (role Buyer) {
 	MyOrder from Buyer;
 }
 			</programlisting>
@@ -243,43 +242,15 @@ bin/simulate.sh samples/models/monitor/Purchasing@Buyer.spr samples/models/monit
 		
 		<itemizedlist>
 		<listitem>
-		sendMessage
+		send
 		<para>
 		The value represents the message type.
 		</para>
 		</listitem>
 		<listitem>
-		receiveMessage
+		receive
 		<para>
 		The value represents the message type.
-		</para>
-		</listitem>
-		<listitem>
-		sendChoice
-		<para>
-		The value represents the choice label.
-		</para>
-		</listitem>
-		<listitem>
-		receiveChoice
-		<para>
-		The value represents the choice label.
-		</para>
-		</listitem>
-		<listitem>
-		sendDecision
-		<para>
-		The value represents the decision boolean value (e.g. true or false). This can be
-		used in conjunction with an <emphasis>Optional</emphasis> or
-		<emphasis>Repeat</emphasis> protocol construct.
-		</para>
-		</listitem>
-		<listitem>
-		receiveDecision
-		<para>
-		The value represents the decision boolean value (e.g. true or false). This can be
-		used in conjunction with an <emphasis>Optional</emphasis> or
-		<emphasis>Repeat</emphasis> protocol construct.
 		</para>
 		</listitem>
 		</itemizedlist>
@@ -290,9 +261,8 @@ bin/simulate.sh samples/models/monitor/Purchasing@Buyer.spr samples/models/monit
 		
 		<informalexample>
 			<programlisting>
-sendMessage,Order,Broker
-receiveChoice,_Confirmation,Broker
-receiveMessage,Confirmation,Broker
+send,Order
+receive,Confirmation
 			</programlisting>
 		</informalexample>
 				
@@ -302,9 +272,8 @@ receiveMessage,Confirmation,Broker
 		
 		<informalexample>
 			<programlisting>
-INFO: Validated SendMessage Order to Broker
-INFO: Validated ReceiveChoice _Confirmation from Broker
-INFO: Validated ReceiveMessage Confirmation from Broker
+INFO: Validated Send Order
+INFO: Validated Receive Confirmation
 			</programlisting>
 		</informalexample>
 	</section>
