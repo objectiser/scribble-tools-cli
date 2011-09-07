@@ -16,6 +16,7 @@
  */
 package org.scribble.commandline;
 
+import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.felix.framework.Felix;
@@ -82,6 +83,10 @@ public class ScribbleCL {
         List<Object> list = new ArrayList<Object>();
         list.add(m_activator);
         configProps.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
+        
+        String storage=System.getProperty("java.io.tmpdir")+File.separatorChar+
+        					"scribble"+File.separatorChar+"felix-cache";
+        configProps.put(Constants.FRAMEWORK_STORAGE, storage);
 
         try {
             // Now create an instance of the framework with

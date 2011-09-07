@@ -122,7 +122,7 @@
 		              <goal>single</goal>
 		            </goals>
 		            <configuration>
-		              <finalName>scribble-${project.version}-src</finalName>
+		              <finalName>scribble-tools-cli-${project.version}-src</finalName>
 		              <appendAssemblyId>false</appendAssemblyId>
 		              <descriptors>
 		                <descriptor>src/main/assembly/src.xml</descriptor>
