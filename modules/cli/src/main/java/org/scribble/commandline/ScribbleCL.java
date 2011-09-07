@@ -88,6 +88,8 @@ public class ScribbleCL {
         					"scribble"+File.separatorChar+"felix-cache";
         configProps.put(Constants.FRAMEWORK_STORAGE, storage);
 
+        configProps.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+        
         try {
             // Now create an instance of the framework with
             // our configuration properties.
