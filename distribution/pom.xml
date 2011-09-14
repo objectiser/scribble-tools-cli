@@ -85,6 +85,11 @@
       <artifactId>org.scribble.protocol.projection</artifactId>
       <version>${scribble.bundles.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.scribble.bundles</groupId>
+      <artifactId>org.scribble.protocol.conformance</artifactId>
+      <version>${scribble.bundles.version}</version>
+    </dependency>
   </dependencies>
 
     <build>

@@ -1,0 +1,29 @@
+import Order;
+import CreditCheck;
+import CreditOk;
+import Confirmation;
+import InsufficientCredit;
+import OrderRejected;
+import OutOfStock;
+
+protocol Purchasing (role Buyer) {
+	Buyer introduces Seller;
+
+	Order from Buyer to Seller;
+
+	choice at Seller {
+		OutOfStock from Seller to Buyer;
+	} or {
+		Seller introduces CreditAgency;
+
+		CreditCheck from Seller to CreditAgency;
+
+		choice at CreditAgency {
+			CreditOk from CreditAgency to Seller;
+			Confirmation from Seller to Buyer;
+		} or {
+			InsuficientCredit from CreditAgency to Seller;
+			OrderRejected from Seller to Buyer;
+		}
+	}
+}

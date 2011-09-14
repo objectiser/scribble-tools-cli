@@ -30,7 +30,7 @@
 		
 		<informalexample>
 			<programlisting>
-bin/parse.sh samples/models/parse_and_validate/OrderProcess.spr
+bin/parse.sh samples/purchasing/Purchasing.spr
 			</programlisting>
 		</informalexample>
 		
@@ -45,29 +45,41 @@ bin/parse.sh samples/models/parse_and_validate/OrderProcess.spr
 		
 		<informalexample>
 			<programlisting>
-import MyOrder;
+import Order;
+import CreditCheck;
+import CreditOk;
+import Confirmation;
+import InsufficientCredit;
+import OrderRejected;
+import OutOfStock;
 
-protocol OrderProcess {
-	role Buyer, Seller;
+protocol Purchasing (role Buyer) {
+	Buyer introduces Seller;
 
-	MyOrder from Buyer to Seller;
-}
-			</programlisting>
+	Order from Buyer to Seller;
+
+	choice at Seller {
+		OutOfStock from Seller to Buyer;
+	} or {
+		Seller introduces CreditAgency;
+
+		CreditCheck from Seller to CreditAgency;
+
+		choice at CreditAgency {
+			CreditOk from CreditAgency to Seller;
+			Confirmation from Seller to Buyer;
+		} or {
+			InsuficientCredit from CreditAgency to Seller;
+			OrderRejected from Seller to Buyer;
+		}
+	}
+}			</programlisting>
 		</informalexample>
 
 		<para>
 		If any errors are detected in the syntax of the parsed protocol description, then
-		these will be reported to the command window. For example, if you edit the
-		supplied file, and change the keyword <emphasis>from</emphasis> to append
-		an 'X', then the following error would be produced:
+		these will be reported to the command window.
 		</para>
-
-		<informalexample>
-			<programlisting>
-ERROR: [line 6] no viable alternative at input 'fromX'
-			</programlisting>
-		</informalexample>
-		
 	</section>
 	
 	<section>
@@ -86,19 +98,19 @@ ERROR: [line 6] no viable alternative at input 'fromX'
 		
 		<informalexample>
 			<programlisting>
-bin/validate.sh samples/models/parse_and_validate/OrderProcess.spr
+bin/validate.sh samples/purchasing/Purchasing.spr
 			</programlisting>
 		</informalexample>
 		
 		<para>
 		When this command is performed initially, it will complete without any errors. However
-		if you edit the <filename>samples/models/parse_and_validate/OrderProcess.spr</filename> file, and change
+		if you edit the <filename>samples/purchasing/Purchasing.spr</filename> file, and change
 		the following line:
 		</para>
 				
 		<informalexample>
 			<programlisting>
-	MyOrder from Buyer to Seller;
+	Order from Buyer to Seller;
 			</programlisting>
 		</informalexample>
 		
@@ -195,7 +207,7 @@ ERROR: Type mismatch with referenced description, was expecting Order
 		
 		<informalexample>
 			<programlisting>
-bin/project.sh samples/models/parse_and_validate/OrderProcess.spr Seller
+bin/project.sh samples/purchasing/Purchasing.spr CreditAgency
 			</programlisting>
 		</informalexample>
 		
@@ -205,9 +217,20 @@ bin/project.sh samples/models/parse_and_validate/OrderProcess.spr Seller
 		
 		<informalexample>
 			<programlisting>
-import MyOrder;
-protocol OrderProcess at Seller (role Buyer) {
-	MyOrder from Buyer;
+import Order;
+import CreditCheck;
+import CreditOk;
+import Confirmation;
+import InsufficientCredit;
+import OrderRejected;
+import OutOfStock;
+protocol Purchasing at CreditAgency(role Seller) {
+	CreditCheck from Seller;
+	choice at CreditAgency {
+		CreditOk to Seller;
+	} or {
+		InsuficientCredit to Seller;
+	}
 }
 			</programlisting>
 		</informalexample>
@@ -230,7 +253,7 @@ protocol OrderProcess at Seller (role Buyer) {
 		
 		<informalexample>
 			<programlisting>
-bin/simulate.sh samples/models/monitor/Purchasing@Buyer.spr samples/models/monitor/Purchasing@Buyer.events
+bin/simulate.sh samples/purchasing/Purchasing@Buyer.spr samples/purchasing/Purchasing@Buyer.events
 			</programlisting>
 		</informalexample>
 		
