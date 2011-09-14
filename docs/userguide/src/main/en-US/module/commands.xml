@@ -73,7 +73,8 @@ protocol Purchasing (role Buyer) {
 			OrderRejected from Seller to Buyer;
 		}
 	}
-}			</programlisting>
+}
+			</programlisting>
 		</informalexample>
 
 		<para>
@@ -122,7 +123,7 @@ bin/validate.sh samples/purchasing/Purchasing.spr
 		
 		<informalexample>
 			<programlisting>
-ERROR: [line 6] Unknown role 'Seller2'
+ERROR: [line 12] Unknown role 'Seller2'
 			</programlisting>
 		</informalexample>
 		
