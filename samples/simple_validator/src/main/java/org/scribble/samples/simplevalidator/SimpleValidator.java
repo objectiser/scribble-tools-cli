@@ -21,12 +21,12 @@ import org.scribble.protocol.validation.ProtocolValidator;
 
 public class SimpleValidator implements ProtocolValidator {
 
-	public void validate(ProtocolModel model, Journal journal) {
-		
-		// Create a visitor implementation that can scan the supplied
-		// protocol model and report any issues to the journal
-		SimpleValidatorVisitor visitor=new SimpleValidatorVisitor(journal);
-		
-		model.visit(visitor);
-	}
+    public void validate(ProtocolModel model, Journal journal) {
+        
+        // Create a visitor implementation that can scan the supplied
+        // protocol model and report any issues to the journal
+        SimpleValidatorVisitor visitor=new SimpleValidatorVisitor(journal);
+        
+        model.visit(visitor);
+    }
 }

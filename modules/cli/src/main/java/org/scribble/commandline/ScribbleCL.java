@@ -17,51 +17,64 @@
 package org.scribble.commandline;
 
 import java.io.File;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.felix.framework.Felix;
 import org.apache.felix.framework.util.FelixConstants;
-import org.osgi.framework.Constants;
-import org.osgi.util.tracker.ServiceTracker;
 import org.apache.felix.main.AutoProcessor;
 import org.apache.felix.main.Main;
-
-import org.scribble.command.*;
+import org.osgi.framework.Constants;
+import org.osgi.util.tracker.ServiceTracker;
+import org.scribble.command.Command;
 import org.scribble.commandline.osgi.HostActivator;
 
+/**
+ * This class provide the command line functionality.
+ *
+ */
 public class ScribbleCL {
-    private HostActivator m_activator = null;
-    private Felix m_felix = null;
-    private ServiceTracker m_tracker = null;
+    private HostActivator _activator = null;
+    private Felix _felix = null;
+    private ServiceTracker _tracker = null;
 
+    /**
+     * The main function.
+     * 
+     * @param args The arguments
+     */
     public static void main(String[] args) {
-    	
-    	if (args.length == 0) {
-    		System.err.println("Command must be specified as first parameter");
-    		System.exit(1);
-    	}
-    	
-    	try {
-        	ScribbleCL scl=new ScribbleCL();
-        	
-    		String[] parameters=new String[args.length-1];
-    		
-    		for (int i=1; i < args.length; i++) {
-    			parameters[i-1] = args[i];
-    		}
-    		
-    		if (scl.execute(args[0], parameters) == false) {
-    			System.err.println("Command not executed");
-    		}
-    		
-    		scl.shutdownApplication();
-    	} catch(Exception e) {
-    		e.printStackTrace();
-    	}
+        
+        if (args.length == 0) {
+            System.err.println("Command must be specified as first parameter");
+            System.exit(1);
+        }
+        
+        try {
+            ScribbleCL scl=new ScribbleCL();
+            
+            String[] parameters=new String[args.length-1];
+            
+            for (int i=1; i < args.length; i++) {
+                parameters[i-1] = args[i];
+            }
+            
+            if (!scl.execute(args[0], parameters)) {
+                System.err.println("Command not executed");
+            }
+            
+            scl.shutdownApplication();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
+    /**
+     * The default constructor.
+     * 
+     */
     public ScribbleCL() {
-    	
+        
         // Create a configuration property map.
         //Map configMap = new HashMap();
         Main.loadSystemProperties();
@@ -76,16 +89,16 @@ public class ScribbleCL {
 
         // Export the host provided service interface package.
         configProps.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
-        			"org.scribble.command");
+                    "org.scribble.command");
         
         // Create host activator;
-        m_activator = new HostActivator();
+        _activator = new HostActivator();
         List<Object> list = new ArrayList<Object>();
-        list.add(m_activator);
+        list.add(_activator);
         configProps.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
         
-        String storage=System.getProperty("java.io.tmpdir")+File.separatorChar+
-        					"scribble"+File.separatorChar+"felix-cache";
+        String storage=System.getProperty("java.io.tmpdir")+File.separatorChar
+                +"scribble"+File.separatorChar+"felix-cache";
         configProps.put(Constants.FRAMEWORK_STORAGE, storage);
 
         configProps.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
@@ -93,29 +106,36 @@ public class ScribbleCL {
         try {
             // Now create an instance of the framework with
             // our configuration properties.
-            m_felix = new Felix(configProps);
+            _felix = new Felix(configProps);
 
-            m_felix.init();
+            _felix.init();
             
-        	AutoProcessor.process(configProps, m_felix.getBundleContext());
-        	
+            AutoProcessor.process(configProps, _felix.getBundleContext());
+            
             // Now start Felix instance.
-            m_felix.start();
+            _felix.start();
         } catch (Exception ex) {
             System.err.println("Could not create framework: " + ex);
             ex.printStackTrace();
         }
 
-        m_tracker = new ServiceTracker(m_activator.getContext(),
-        		org.scribble.command.Command.class.getName(), null);
+        _tracker = new ServiceTracker(_activator.getContext(),
+                org.scribble.command.Command.class.getName(), null);
         
-        m_tracker.open();
+        _tracker.open();
     }
 
-    public boolean execute(String name, String args[]) {
+    /**
+     * The method for executing the command.
+     * 
+     * @param name The command name
+     * @param args The arguments
+     * @return Whether the command executed
+     */
+    public boolean execute(String name, String[] args) {
         // See if any of the currently tracked command services
         // match the specified command name, if so then execute it.
-        Object[] services = m_tracker.getServices();
+        Object[] services = _tracker.getServices();
         
         for (int i = 0; (services != null) && (i < services.length); i++) {
             try {
@@ -133,10 +153,15 @@ public class ScribbleCL {
         return false;
     }
 
+    /**
+     * This method shuts down the application.
+     * 
+     * @throws Exception Failed
+     */
     public void shutdownApplication() throws Exception {
         // Shut down the felix framework when stopping the
         // host application.
-        m_felix.stop();
-        m_felix.waitForStop(5000);
+        _felix.stop();
+        _felix.waitForStop(5000);
     }
 }

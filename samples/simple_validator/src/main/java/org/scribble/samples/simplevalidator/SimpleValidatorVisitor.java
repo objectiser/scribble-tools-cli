@@ -22,27 +22,27 @@ import org.scribble.protocol.model.*;
 
 public class SimpleValidatorVisitor extends DefaultVisitor {
 
-	private Journal m_journal=null;
-	
-	public SimpleValidatorVisitor(Journal journal) {
-		m_journal = journal;
-	}
+    private Journal m_journal=null;
+    
+    public SimpleValidatorVisitor(Journal journal) {
+        m_journal = journal;
+    }
 
-	public void accept(Interaction elem) {
-		
-		// Check if interaction is an Order
-		if (elem.getMessageSignature() != null) {
-			
-			for (TypeReference tref : elem.getMessageSignature().getTypeReferences()) {
-	
-				if (tref.getName() != null && tref.getName().equalsIgnoreCase("Order")) {
-					
-					m_journal.error(java.util.PropertyResourceBundle.getBundle(
-							"org.scribble.samples.simplevalidator.Messages").
-									getString("_ORDER_FOUND"), null);
-				}
-			}
-		}
-		
-	}
+    public void accept(Interaction elem) {
+        
+        // Check if interaction is an Order
+        if (elem.getMessageSignature() != null) {
+            
+            for (TypeReference tref : elem.getMessageSignature().getTypeReferences()) {
+    
+                if (tref.getName() != null && tref.getName().equalsIgnoreCase("Order")) {
+                    
+                    m_journal.error(java.util.PropertyResourceBundle.getBundle(
+                            "org.scribble.samples.simplevalidator.Messages").
+                                    getString("_ORDER_FOUND"), null);
+                }
+            }
+        }
+        
+    }
 }

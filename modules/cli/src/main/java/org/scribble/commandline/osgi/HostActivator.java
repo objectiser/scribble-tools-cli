@@ -19,22 +19,32 @@ package org.scribble.commandline.osgi;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-public class HostActivator implements BundleActivator
-{
-    private BundleContext m_context = null;
+/**
+ * The activator for the command line.
+ *
+ */
+public class HostActivator implements BundleActivator {
+    
+    private BundleContext _context = null;
 
-    public void start(BundleContext context)
-    {
-        m_context = context;
+    /**
+     * {@inheritDoc}
+     */
+    public void start(BundleContext context) {
+        _context = context;
     }
 
-    public void stop(BundleContext context)
-    {
-        m_context = null;
+    /**
+     * {@inheritDoc}
+     */
+    public void stop(BundleContext context) {
+        _context = null;
     }
 
-    public BundleContext getContext()
-    {
-        return m_context;
+    /**
+     * {@inheritDoc}
+     */
+    public BundleContext getContext() {
+        return _context;
     }
 }
