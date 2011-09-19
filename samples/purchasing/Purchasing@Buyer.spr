@@ -6,7 +6,7 @@ import InsufficientCredit;
 import OrderRejected;
 import OutOfStock;
 
-protocol Purchasing at Buyer (role Seller) {
+protocol Purchasing at Buyer {
 	Buyer introduces Seller;
 
 	Order to Seller;
