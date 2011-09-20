@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="sid-2195687">
+    
+    <title>Developing a Validator</title>
+    <para>
+      This section will describe how to create a validator,
+      
+      using the 'simple validator' example within the Scribble
+      
+      distribution
+      <code>samples/validator/simple.validator</code>
+      folder.
+    </para>
+    <section id="sid-2195686">
+      
+      <title>Create the Validator OSGi bundle</title>
+      <para>
+        This section will explain how to create an OSGi bundle
+        
+        for a validator from within the Eclipse environment.
+      </para>
+      <para>
+        The first step is to create the plugin project, using the
+        
+        <emphasis role="italics">New-&gt;Project-&gt;Plugin Project</emphasis>
+        menu item.
+      </para>
+      <para>
+        Ensure the 'Create java project' checkbox is ticked, and then
+        
+        set the source folder to be
+        <code>src/main/java</code>
+        
+        and set the
+        <emphasis role="italics">Target Platform</emphasis>
+        to a
+        
+        standard 'OSGi Framework'.
+      </para>
+      <para>
+        Then press the
+        <emphasis role="italics">Next</emphasis>
+        button to set some details
+        
+        associated with the plugin, such as the version, description,
+        
+        provider, etc.
+      </para>
+      <para>
+        In this example, we will be registering the validator using
+        
+        the OSGi
+        <emphasis role="italics">registerService</emphasis>
+        method. This is
+        
+        performed in the bundle activator, whose class is set in the
+        
+        plugin details. For example, in the start method of the
+        
+        created Activator, we would have:
+      </para>
+      <informalexample>
+        <programlisting>public void start(BundleContext context) throws Exception {
+        Properties props = new Properties();
+        
+        ProtocolValidator validator=new SimpleValidator();
+        
+        context.registerService(ProtocolValidator.class.getName(), 
+				validator, props);
+	}</programlisting>
+      </informalexample>
+    </section>
+    <section id="sid-2195688">
+      
+      <title>Establish Bundle Dependencies</title>
+      <para>
+        Depending on the type of bundle being developed, it may
+        
+        have a different set of dependencies than the ones
+        
+        required by this 'simple' validator. However the
+        
+        configuration approach will be the same.
+      </para>
+      <para>
+        Go to the
+        <code>META-INF/MANIFEST.MF</code>
+        file
+        
+        and select it. This will cause the plugin manifest
+        
+        editor to be displayed.
+      </para>
+      <para>
+        Select the
+        <emphasis role="italics">Dependencies</emphasis>
+        tab and
+        
+        select the other bundles that will be required, or
+        
+        preferrably select the packages to be imported (as this
+        
+        avoids dependency on specific bundles, and instead
+        
+        just identifies the packages required). For this
+        
+        example validator, we just need to add the packages
+        
+        from the
+        <emphasis role="italics">org.scribble.common</emphasis>
+        bundle
+        
+        which is used by all Scribble plugins. However if
+        
+        additional packages were required, then they could be
+        
+        added as imported packages (e.g. org.scribble.protocol.model
+        
+        and org.scribble.protocol.validation).
+      </para>
+    </section>
+    <section id="sid-2195689">
+      
+      <title>Implement the Module</title>
+      <para>
+        Each module will be different, and therefore discussing
+        
+        specific implementation details will not be possible.
+      </para>
+      <para>
+        However validation modules will tend to access the complete
+        
+        model, but possibly only be interested in certain parts
+        
+        of it. Therefore usually the validation modules will
+        
+        define an implementation of the
+        
+        <code>org.scribble.protocol.model.Visitor</code>
+        interface.
+      </para>
+      <para>
+        In the example validator, there is a
+        <code>SimpleValidatorVisitor</code>
+        
+        class that is derived from the
+        <code>DefaultVisitor</code>
+        ,
+        
+        and only overrides the method to accept an interaction. Therefore only
+        
+        validation of interactions is of interest to this validator. In this
+        
+        particular case, the validator is checking the message types, and reporting
+        
+        an error if a particular value is detected.
+      </para>
+      <para>
+        The actual main class within the validator module would
+        
+        implement the
+        <code>org.scribble.protocol.validation.ProtocolValidator</code>
+        
+        interface.
+      </para>
+      <para>
+        There may also exist specialised implementations of the
+        
+        <emphasis role="italics">ProtocolValidator</emphasis>
+        interface that help support
+        
+        the validation process. For example, the
+        
+        <emphasis role="italics">ProtocolComponentValidator</emphasis>
+        which triggers
+        
+        a
+        <emphasis role="italics">ProtocolComponentValidatorRule</emphasis>
+        based on the
+        
+        type of the model component. The visitor is used to traverse
+        
+        the model to identify the model components being validated.
+        
+        So its possible, if validation of only a couple of model
+        
+        component types is required (as in the simple validator),
+        
+        to derive a specialisation of the
+        
+        <emphasis role="italics">ProtocolComponentValidator</emphasis>
+        class with
+        
+        the relevant rule implementations.
+      </para>
+    </section>
+    <section id="sid-2195690">
+      
+      <title>Create the Maven POM</title>
+      <para>
+        The simple validator in the Scribble samples uses Maven to
+        
+        build the OSGi bundle.
+      </para>
+      <para>
+        The main aspect of the Maven pom is to define the dependencies,
+        
+        which are equivalent to the ones defined in the MANIFEST.MF,
+        
+        and to customise the build phase to make sure the delivered
+        
+        jar has the MANIFEST.MF included, rather than the default
+        
+        one.
+      </para>
+    </section>
+  </chapter>

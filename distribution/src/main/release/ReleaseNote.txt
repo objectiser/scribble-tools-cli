@@ -1,3 +1,18 @@
+Scribble 2.0.0.CR1
+==================
+
+This is the first candidate release for version 2 of the Scribble Java based tools.
+
+This release includes further updates related to version 1 of the Protocol syntax,
+as well as improvements in the choice projection/merging algorithm and the
+inclusion of a 'connectedness' validation rule to ensure interaction sentences
+are appropriately associated with previously used roles.
+
+The release also includes a number of bug fixes.
+
+The details for this release can be found here:
+https://issues.jboss.org/secure/ReleaseNote.jspa?projectId=12311020&version=12317214
+
 Scribble 2.0.0.M6
 =================
 

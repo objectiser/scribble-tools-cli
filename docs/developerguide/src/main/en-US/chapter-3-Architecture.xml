@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="sid-2195683">
+    
+    <title>Architecture</title>
+    <section id="sid-2195682">
+      
+      <title>OSGi Infrastructure</title>
+      <para>
+        The Scribble architecture is based on OSGi, to provide a means
+        
+        of managing the individual modules, but without causing tight
+        
+        coupling.
+      </para>
+      <para>
+        Service bundles enable implementations to be specified that
+        
+        implement defined interfaces. Other services can then
+        
+        request access to services that implement a particular interface.
+      </para>
+      <para>
+        The OSGi service container takes responsibility of managing the
+        
+        services, and providing access to requesting components.
+      </para>
+      <para>This provides flexibility for Scribble tooling in two respects:</para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Replaceable
+            
+            The implementation of a particular Scribble interface can
+            
+            easily be replaced. This enables different research or
+            
+            industry groups to replace specific modules, with
+            
+            alternative implementations, while still reusing other
+            
+            modules.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Extensibility
+            
+            Some aspects of the architecture allow for multiple implementations
+            
+            of the same interface. Therefore, using OSGi, enables
+            
+            additional implementations of the same interface to be
+            
+            easily plugged in, without having to define any
+            
+            additional configuration information.
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section id="sid-2195684">
+      
+      <title>Core Components</title>
+      <section id="sid-2195684_CoreComponents-ErrorLogging">
+        
+        <title>Error Logging</title>
+        <para>
+          There is a generic logging API within the Scribble
+          
+          framework that can be used for reporting errors,
+          
+          warnings, information or debuging details.
+          
+          This API is
+          <emphasis role="italics">org.scribble.common.logging.Journal</emphasis>
+          .
+        </para>
+        <para>
+          The methods generally take two parameters, a message
+          
+          and a property map. The message is simply a description
+          
+          of the issue being reported. The property map contain
+          
+          specific details about the issue being reported.
+        </para>
+        <para>
+          For example, when the parser detects a problem, it
+          
+          can report the nature of the problem, and provide the
+          
+          location of the issue in the source file.
+        </para>
+        <section id="sid-2195684_CoreComponents-Internationalization">
+          
+          <title>Internationalization</title>
+          <para>
+            To enable errors reported from the Scribble parser
+            
+            and validation modules, in a number of different
+            
+            languages, internationalization should be used.
+          </para>
+          <para>
+            The following code fragment provides an example
+            
+            of how internationalization can be achieved, using
+            
+            parameterised messages.
+          </para>
+          <informalexample>
+            <programlisting>logger.error(java.text.MessageUtil.format(
+						java.util.PropertyResourceBundle.getBundle(
+							"org.scribble.protocol.Messages").getString(
+							"_CHOICE_ROLE"), "from"), obj.getProperties());</programlisting>
+          </informalexample>
+          <para>
+            The main message content is obtained from a
+            
+            properties file, with the name being supplied
+            
+            as the parameter to the
+            <emphasis role="italics">getBundle</emphasis>
+            
+            method. The property file must be placed
+            
+            the correct package within the
+            
+            <code>src/main/resources</code>
+            folder, to
+            
+            ensure the properties are correctly packaged
+            
+            by maven.
+          </para>
+          <para>
+            The messages within the property files can have
+            
+            values that include parameters. Parameters are
+            
+            numbered in sequential order, and defined between
+            
+            curly braces (e.g. {n} where 'n' is the number).
+            
+            For example,
+          </para>
+          <informalexample>
+            <programlisting>_EXISTING_DECLARATION=Declaration already exists for name {0}</programlisting>
+          </informalexample>
+          <para>This message only has a single parameter.</para>
+          <para>
+            In the previous code fragment, the
+            
+            <emphasis role="italics">MessageUtil.format()</emphasis>
+            
+            method takes the message as the first parameter,
+            
+            and a variable comma separated list of strings as the parameter values
+            
+            to be substituted in the message. So in the
+            
+            code fragment, the value
+            <emphasis role="italics">"from"</emphasis>
+            
+            would be substituted in the
+            <emphasis role="italics">{0}</emphasis>
+            
+            parameter of the
+            <emphasis role="italics">_CHOICE_ROLE</emphasis>
+            
+            message, and then reported to the journal.
+          </para>
+        </section>
+      </section>
+      <section id="sid-2195684_CoreComponents-ProtocolModel">
+        
+        <title>Protocol Model</title>
+        <para>
+          The object model representation of a Protocol is defined using classes within
+          
+          the
+          <emphasis role="italics">org.scribble.protocol.model</emphasis>
+          package. All model classes
+          
+          are derived from a common
+          <emphasis role="italics">ModelObject</emphasis>
+          class, which defines
+          
+          common properties of all components in the model.
+        </para>
+        <para>
+          Where object model components are contained by another model component, we use
+          
+          a special list implementation called
+          <emphasis role="italics">ContainmentList</emphasis>
+          . This
+          
+          implementation maintains a reference to its containing parent model object, making
+          
+          it easier to navigate up the protocol object model hierarchy.
+        </para>
+      </section>
+      <section id="sid-2195684_CoreComponents-ProtocolParser">
+        
+        <title>Protocol Parser</title>
+        <para>
+          The Protocol Parser is responsible for converting the textual Scribble
+          
+          notation into an object model representation.
+        </para>
+        <informalexample>
+          <programlisting>package org.scribble.protocol.parser;
+...
+public interface ProtocolParser {
+	public org.scribble.protocol.model.ProtocolModel parse(java.io.InputStream is,
+							org.scribble.common.logging.Journal journal);
+
+}</programlisting>
+        </informalexample>
+        <para>
+          The parser only has a single method, which takes the input stream containing
+          
+          the text based representation of the Scribble protocol, and a Journal
+          
+          for error reporting purposes.
+        </para>
+        <para>
+          If the Protocol has valid syntax, then a
+          <emphasis role="italics">ProtocolModel</emphasis>
+          
+          will be returned representing the protocol in object model form.
+        </para>
+      </section>
+      <section id="sid-2195684_CoreComponents-ProtocolProjection">
+        
+        <title>Protocol Projection</title>
+        <para>
+          The protocol projection component is used to derive a local protocol representation,
+          
+          associated with a nominated role, from a global protocol representation.
+        </para>
+        <para>The interface for this component is,</para>
+        <informalexample>
+          <programlisting>package org.scribble.protocol.projection;
+...
+public interface ProtocolProjector {
+
+	public ProtocolModel project(ProtocolModel model, Role role,
+							Journal journal);
+}</programlisting>
+        </informalexample>
+        <para>
+          This method takes the global protocol model, the role to be
+          
+          projected, and a journal for reporting any errors. The
+          
+          result is either a local representation of the protocol
+          
+          model for the specified role, or null if a failure occurred.
+        </para>
+      </section>
+      <section id="sid-2195684_CoreComponents-ProtocolValidationManagerandValidators">
+        
+        <title>Protocol Validation Manager and Validators</title>
+        <para>
+          The validation manager, when used in a OSGi runtime
+          
+          environment, will listen for the activation of any
+          
+          implementations of the
+          
+          <code>org.scribble.protocol.validation.Validator</code>
+          
+          interface.
+        </para>
+        <para>
+          This means that the validation of any model can be
+          
+          performed using the
+          
+          <emphasis role="italics">org.scribble.protocol.validation.ValidationManager</emphasis>
+          ,
+          
+          rather than having to obtain instances of
+          
+          multiple implementations of the
+          <code>Validator</code>
+          
+          interface.
+        </para>
+        <para>
+          When the
+          <code>ValidatorManager</code>
+          is used
+          
+          outside of an OSGi environment, it is necessary for the
+          
+          validators to be added to the manager by other means.
+        </para>
+        <section id="sid-2195684_CoreComponents-ModelComponentbasedValidation">
+          
+          <title>Model Component based Validation</title>
+          <para>
+            One of the default validation implementations is
+            
+            <emphasis role="italics">org.scribble.protocol.validation.rules.DefaultProtocolComponentValidator</emphasis>
+            .
+            
+            This class is derived from a generic based class that validates
+            
+            supplied protocol models by visiting the component objects
+            
+            within the model, and invoking a specific 'validation rule'
+            
+            based on the type of the model object.
+          </para>
+          <para>
+            This default implementation is used to provide the basic
+            
+            validation rules for the model components. For example,
+            
+            to ensure that the roles defined within an interaction have
+            
+            been previously declared within the scope containing the
+            
+            interaction.
+          </para>
+        </section>
+      </section>
+      <section id="sid-2195684_CoreComponents-ExportingtheProtocolmodeltootherrepresentations">
+        
+        <title>Exporting the Protocol model to other representations</title>
+        <para>
+          The Scribble tools provide a mechanism for exporting a Scribble Protocol
+          
+          object model to other representations. This module has the following
+          
+          interface,
+        </para>
+        <informalexample>
+          <programlisting>package org.scribble.protocol.exporter;
+...
+public interface ProtocolExporter {
+	public String getId();
+	public String getName();
+	public void export(ProtocolModel model, Journal journal, java.io.OutputStream os);	
+}</programlisting>
+        </informalexample>
+        <para>
+          Each 'exporter' implementation defines an id and more descriptive. The id
+          
+          can be used to lookup the implementation from the
+          <emphasis role="italics">ProtocolExportManager</emphasis>
+          ,
+          
+          whereas the name can be used as a descriptive name for display to users.
+        </para>
+        <para>
+          The
+          <emphasis role="italics">export</emphasis>
+          method takes the protocol model to be
+          
+          exported, the journal where to report errors, and the output stream which
+          
+          will be the destination for the exported representation.
+        </para>
+        <para>
+          The
+          <emphasis role="italics">org.scribble.protocol</emphasis>
+          bundle contains a default
+          
+          exporter to convert the Scribble object model representation into a text
+          
+          based representation. The 'id' for this implementation is
+          <emphasis role="italics">txt</emphasis>
+          .
+        </para>
+        <section id="sid-2195684_CoreComponents-Monitor">
+          
+          <title>Monitor</title>
+          <para>
+            Another export module is the
+            <emphasis role="italics">org.scribble.protocol.export.monitor</emphasis>
+            .
+          </para>
+          <para>
+            This implementation produces an XML based finite state machine representation
+            
+            of the protocol, for use by the Scribble Protocol Monitor.
+          </para>
+        </section>
+      </section>
+      <section id="sid-2195684_CoreComponents-ScribbleProtocolMonitor">
+        
+        <title>Scribble Protocol Monitor</title>
+        <para>
+          The Scribble Protocol Monitor provides a runtime component that can
+          
+          observe messages being sent and received by an endpoint application,
+          
+          assuming a particular role within a protocol, and ensure that it
+          
+          conforms to the expected behaviour.
+        </para>
+        <warning>
+          <para>TO BE DOCUMENTED</para>
+        </warning>
+      </section>
+    </section>
+    <section id="sid-2195685">
+      
+      <title>Command Line Actions</title>
+      <para>
+        The first step is to define the command implementation
+        
+        of the
+        <emphasis role="italics">org.scribble.command.Command</emphasis>
+        
+        interface. This can be created in the
+        
+        <emphasis role="italics">org.scribble.command</emphasis>
+        Eclipse plugin.
+      </para>
+      <para>
+        To initialise the command, as part of an OSGi
+        
+        runtime environment, the command implementation can be
+        
+        instantiated in the
+        <emphasis role="italics">org.scribble.command</emphasis>
+        
+        plugin's
+        <emphasis role="italics">Activator</emphasis>
+        , and then
+        
+        registered with the bundle context.
+      </para>
+      <para>
+        If the command requires other OSGi services, then
+        
+        these can be established by setting up service listeners
+        
+        for the relevant service interface classes. When
+        
+        OSGi services are registered, then the relationship
+        
+        can be established.
+      </para>
+      <para>
+        This command mechanism will generally only be used
+        
+        as part of the command line approach, and therefore
+        
+        does not need to be initialised in other ways. However
+        
+        other dependency injection techniques could be
+        
+        used if appropriate.
+      </para>
+      <para>
+        The only remaining step is to create the scripts
+        
+        necessary to enable a user to invoke the command.
+        
+        This can be achieved by copying one of the existing
+        
+        scripts, in the
+        <code>distribution/src/main/release</code>
+        
+        folder (such as
+        <code>parse.sh</code>
+        ),
+        
+        and modify the parameter details as necessary.
+      </para>
+      <note>
+        <para>
+          The first parameter of the Java application, invoked
+          
+          within the script, must be the name of the command.
+          
+          This must match the value returned by the
+          
+          <emphasis role="italics">getName()</emphasis>
+          method on the command
+          
+          interface.
+        </para>
+      </note>
+    </section>
+  </chapter>

@@ -48,6 +48,9 @@
 	    	<directory>src/main/release/bin</directory>
 	    	<outputDirectory>/bin</outputDirectory>
 	    	<fileMode>0777</fileMode>
+		<excludes>
+			<exclude>conforms.sh</exclude>
+		</excludes>
 	    </fileSet>
 
         <!-- Copy samples -->
@@ -58,10 +61,12 @@
 			<fileMode>0777</fileMode>
 		</fileSet>
         
+<!--
 	    <fileSet>
 	    	<directory>../docs/protocolguide/target/docbook/publish/en-US</directory>
 	    	<outputDirectory>/docs/protocolguide</outputDirectory>
 	    </fileSet>
+-->
 
 	    <fileSet>
 	    	<directory>../docs/developerguide/target/docbook/publish/en-US</directory>

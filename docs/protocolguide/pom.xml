@@ -45,7 +45,7 @@
 			  </dependency>
 			</dependencies>
 			<configuration>
-			  <sourceDocumentName>master.xml</sourceDocumentName>
+			  <sourceDocumentName>Scribble_Protocol_Guide.xml</sourceDocumentName>
 			  <sourceDirectory>${basedir}/src/main</sourceDirectory>
 			  <imageResource>
 			    <directory>${basedir}/src/main</directory>

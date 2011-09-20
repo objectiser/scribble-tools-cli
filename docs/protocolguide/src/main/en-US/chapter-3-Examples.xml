@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="sid-2195720">
+    
+    <title>Examples</title>
+    <para>
+      This chapter presents some examples using the
+      <emphasis role="italics">protocol</emphasis>
+      notation.
+    </para>
+    <section id="sid-2195719">
+      
+      <title>Buyer Seller Protocol</title>
+      <para>
+        This example shows how a
+        <emphasis role="italics">Buyer</emphasis>
+        participant and
+        
+        <emphasis role="italics">Seller</emphasis>
+        participant may interact in an ordering
+        
+        process.
+      </para>
+      <informalexample>
+        <programlisting>protocol BuyerSeller {
+    role Buyer, Seller;
+    
+    Order from Buyer to Seller;
+    
+    choicefrom Seller to Buyer; {
+        Invoice {
+        }
+        Rejected {
+        }
+	}
+}</programlisting>
+      </informalexample>
+    </section>
+    <section id="sid-2195721">
+      
+      <title>Credit Check Protocol</title>
+      <para>
+        This example shows how a
+        <emphasis role="italics">Client</emphasis>
+        role performs a credit check
+        
+        against a
+        <emphasis role="italics">CreditAgency</emphasis>
+        role.
+      </para>
+      <informalexample>
+        <programlisting>protocol CreditCheck {
+    role Client, CreditAgency;
+    
+    CheckCredit from Client to CreditAgency;
+    
+    choicefrom CreditAgency to Client {
+        CreditOk {
+        }
+        NoCredit {
+        }
+    }
+}</programlisting>
+      </informalexample>
+    </section>
+    <section id="sid-2195722">
+      
+      <title>Purchasing Goods Conversation</title>
+      <para>
+        This example shows how a protocol can be defined that 'implements' the
+        
+        previous two protocol examples.
+      </para>
+      <informalexample>
+        <programlisting>protocol BuyerSellerCreditCheck {
+    role Buyer, Seller, CreditAgency;
+    
+    Order from Buyer to Seller;
+    
+    CheckCredit from Seller to CreditAgency;
+    
+    choicefrom CreditAgency to Seller {
+        CreditOk {
+        	Invoice from Seller to Buyer;
+        }
+        NoCredit {
+        	Rejected from Seller to Buyer;
+        }
+    }
+}</programlisting>
+      </informalexample>
+    </section>
+  </chapter>
