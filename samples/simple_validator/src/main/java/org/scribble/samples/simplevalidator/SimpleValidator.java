@@ -18,10 +18,11 @@ package org.scribble.samples.simplevalidator;
 import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.validation.ProtocolValidator;
+import org.scribble.protocol.validation.ProtocolValidatorContext;
 
 public class SimpleValidator implements ProtocolValidator {
 
-    public void validate(ProtocolModel model, Journal journal) {
+    public void validate(ProtocolValidatorContext pvc, ProtocolModel model, Journal journal) {
         
         // Create a visitor implementation that can scan the supplied
         // protocol model and report any issues to the journal
