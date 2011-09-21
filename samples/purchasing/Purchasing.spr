@@ -22,7 +22,7 @@ protocol Purchasing (role Buyer) {
 			CreditOk from CreditAgency to Seller;
 			Confirmation from Seller to Buyer;
 		} or {
-			InsuficientCredit from CreditAgency to Seller;
+			InsufficientCredit from CreditAgency to Seller;
 			OrderRejected from Seller to Buyer;
 		}
 	}
