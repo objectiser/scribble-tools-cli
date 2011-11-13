@@ -61,12 +61,10 @@
 			<fileMode>0777</fileMode>
 		</fileSet>
         
-<!--
 	    <fileSet>
 	    	<directory>../docs/protocolguide/target/docbook/publish/en-US</directory>
 	    	<outputDirectory>/docs/protocolguide</outputDirectory>
 	    </fileSet>
--->
 
 	    <fileSet>
 	    	<directory>../docs/developerguide/target/docbook/publish/en-US</directory>
