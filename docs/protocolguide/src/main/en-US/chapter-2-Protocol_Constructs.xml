@@ -32,17 +32,15 @@
         </listitem>
       </itemizedlist>
       <informalexample>
-        <programlisting>( import [ &lt;TypeSystem&gt; ]
-			[ "&lt;DataType&gt;" as ] &lt;name&gt; 
-			( "," [ "&lt;DataType&gt;" as ] &lt;name&gt; )*
-			[ from "&lt;Location&gt;" ] ";" )*
+        <programlisting role="XML" ><![CDATA[( import [ <TypeSystem> ]
+			[ "<DataType>" as ] <name>
+			( "," [ "<DataType>" as ] <name> )*
+			[ from "<Location>" ] ";" )*
 
-protocol &lt;name&gt; [ "@" &lt;Role&gt; ] 
-					[ "(" ( role | &lt;Type&gt; ) &lt;name&gt;
-				( "," role | &lt;Type&gt; ) &lt;name&gt; )*
-						")" ] "{"
+protocol <name> [ "at" <Role> ] "(" ( role | <Type> ) <name>
+	    ( "," role | <Type> ) <name> )* ")" "{"
     .... ";"
-"}"</programlisting>
+"}"]]></programlisting>
       </informalexample>
       <para>
         The import statement is used to define a type that will be used within the protocol definition.
@@ -88,22 +86,21 @@ protocol &lt;name&gt; [ "@" &lt;Role&gt; ]
       </para>
       <para>The following represents a 'global' protocol example:</para>
       <informalexample>
-        <programlisting>import Customer;
+        <programlisting role="XML" ><![CDATA[import Customer;
 
-import xsd
-				"{http://www.acme.org/Purchasing}Order" as Order,
-				"{http://www.acme.org/Purchasing}Quote" as Quote
-				from "../schema/MySchema.xsd";
+import xsd "{http://www.acme.org/Purchasing}Order" as Order,
+	"{http://www.acme.org/Purchasing}Quote" as Quote
+	from "../schema/MySchema.xsd";
 
-import java
-		"Order" as Order,
-		"Quote" as Quote
-		from "org.scribble";
+import java "Order" as Order,
+	"Quote" as Quote
+	from "org.scribble";
 
-protocol PurchaseGoods {
-    role Buyer, Seller;
+protocol PurchaseGoods (role Buyer) {
+    Buyer introduces Seller;
+    Order from Buyer to Seller;
     ....
-}</programlisting>
+}]]></programlisting>
       </informalexample>
       <para>
         This example shows three variations of the import statement.
@@ -119,11 +116,9 @@ protocol PurchaseGoods {
         
         The first being an XSD type, known by the qualified name
         
-        <emphasis role="italics">
-          {
-          <ulink url="http://www.acme.org/Purchasing">http://www.acme.org/Purchasing\</ulink>
-          }Order
-        </emphasis>
+        <emphasis role="italics">{</emphasis>
+        <emphasis role="italics">[http://www.acme.org/Purchasing]</emphasis>
+        <emphasis role="italics">}Order</emphasis>
         and
         
         locally referred to using the alias
@@ -132,11 +127,9 @@ protocol PurchaseGoods {
         
         The second being an XSD element, known by the qualified name
         
-        <emphasis role="italics">
-          {
-          <ulink url="http://www.acme.org/Purchasing">http://www.acme.org/Purchasing\</ulink>
-          }Quote
-        </emphasis>
+        <emphasis role="italics">{</emphasis>
+        <emphasis role="italics">[http://www.acme.org/Purchasing]</emphasis>
+        <emphasis role="italics">}Quote</emphasis>
         and
         
         locally referred to using the alias
@@ -163,23 +156,26 @@ protocol PurchaseGoods {
       </para>
       <para>A local protocol variation would be:</para>
       <informalexample>
-        <programlisting>protocol PurchaseGoods @ Buyer {
-    role Seller;
+        <programlisting role="XML" ><![CDATA[protocol PurchaseGoods at Buyer (role Buyer) {
+    Buyer introduces Seller;
+    Order to Seller;
     ....
-}</programlisting>
+}]]></programlisting>
       </informalexample>
       <para>
         This local representation of the protocol defines the behaviour from the
         <emphasis role="italics">Buyer</emphasis>
         
-        role's perspective. That is why the roles declared within the protocol unit only
+        role's perspective. That is why the interaction defined within the protocol unit only
         
-        include the
+        include the 'to role'
         <emphasis role="italics">Seller</emphasis>
         , as this is the role with which the
         
         <emphasis role="italics">Buyer</emphasis>
-        is going to communicate.
+        is going to communicate. The
+        <emphasis role="italics">Buyer</emphasis>
+        role in the interaction is implied from the located role of the local protocol.
       </para>
       <para>
         The protocol can also be defined with parameters, to allow other protocols to invoke them
@@ -189,10 +185,9 @@ protocol PurchaseGoods {
         passed into the protocol instead.
       </para>
       <informalexample>
-        <programlisting>protocol PurchaseGoods(role Buyer,
-									role Seller) {
+        <programlisting role="XML" ><![CDATA[protocol PurchaseGoods(role Buyer, role Seller) {
     ....
-}</programlisting>
+}]]></programlisting>
       </informalexample>
       <para>
         The way in which another protocol can be invoked will be presented in a subsequent
@@ -217,7 +212,7 @@ protocol PurchaseGoods {
         </listitem>
       </itemizedlist>
       <informalexample>
-        <programlisting>&lt;MessageSignature&gt; [from &lt;Role&gt;] [ to &lt;Role&gt; ( "," &lt;Role&gt; )* )]</programlisting>
+        <programlisting role="XML" ><![CDATA[<MessageSignature> [from <Role>] [ to <Role> ( "," <Role> )* )]]]></programlisting>
       </informalexample>
       <para>
         The following example shows a similar type of interaction as shown in the
@@ -225,8 +220,8 @@ protocol PurchaseGoods {
         'hello world' example.
       </para>
       <informalexample>
-        <programlisting>role Customer, Supplier;
-Order from Customer to Supplier;</programlisting>
+        <programlisting role="XML" ><![CDATA[Customer introduces Supplier;
+Order from Customer to Supplier;]]></programlisting>
       </informalexample>
       <para>
         In this sample, two roles are declared, with the interaction indicating that
@@ -234,7 +229,7 @@ Order from Customer to Supplier;</programlisting>
         a message of type 'Order' will be sent from role 'Customer' to role 'Supplier'.
       </para>
       <informalexample>
-        <programlisting>placeOrder(Order) from Customer to Supplier;</programlisting>
+        <programlisting role="XML" ><![CDATA[placeOrder(Order) from Customer to Supplier;]]></programlisting>
       </informalexample>
       <para>
         This example demonstrates an alternative way for the exchanged message to be
@@ -272,9 +267,9 @@ Order from Customer to Supplier;</programlisting>
         completion of the preceding activity.
       </para>
       <informalexample>
-        <programlisting>"{"
-    ( &lt;Activity&gt; ";" )*
-"}"</programlisting>
+        <programlisting role="XML" ><![CDATA["{"
+    ( <Activity> ";" )*
+"}"]]></programlisting>
       </informalexample>
       <para>
         where
@@ -285,12 +280,12 @@ Order from Customer to Supplier;</programlisting>
       </para>
       <para>The following example shows a sequence of interactions.</para>
       <informalexample>
-        <programlisting>{
+        <programlisting role="XML" ><![CDATA[{
     Order from Buyer to Seller;
     Invoice from Seller to Buyer;
     Payment from Buyer to Seller;
     Confirmation from Seller to Buyer;
-}</programlisting>
+}]]></programlisting>
       </informalexample>
     </section>
     <section id="sid-2195712">
@@ -307,147 +302,135 @@ Order from Customer to Supplier;</programlisting>
         
         will be the recipient, reacting to the specific message received.
       </para>
-      <para>
-        The syntax for the
-        <emphasis role="italics">choice</emphasis>
-        construct is:
-      </para>
-      <informalexample>
-        <programlisting>choice [from &lt;Role&gt;] [to &lt;Role&gt; ( "," &lt;Role&gt; )* ] "{"
-	&lt;MessageSignature&gt; ":"
+      <para>There are two various of the choice construct, which will be presented below.</para>
+      <section id="sid-2195712_Choice-DirectedChoice">
+        
+        <title>Directed Choice</title>
+        <para>
+          The syntax for the
+          <emphasis role="italics">directed</emphasis>
+          <emphasis role="italics">choice</emphasis>
+          construct is:
+        </para>
+        <informalexample>
+          <programlisting role="XML" ><![CDATA[from <Role> to <Role> ( "," <Role> )* "{"
+    <MessageSignature> ":"
     	...
-    	
-	&lt;MessageSignature&gt; ":"
+
+    <MessageSignature> ":"
     	...
-"}"</programlisting>
-      </informalexample>
-      <para>For example,</para>
-      <informalexample>
-        <programlisting>CreditCheck from Seller to CreditAgency;
+"}"]]></programlisting>
+        </informalexample>
+        <para>For example,</para>
+        <informalexample>
+          <programlisting role="XML" ><![CDATA[CreditCheck from Seller to CreditAgency;
 
 choicefrom CreditAgency to Seller {
     CreditRefused:
-    
-    CreditOk:
-}</programlisting>
-      </informalexample>
-      <para>For example,</para>
-      <informalexample>
-        <programlisting>CreditCheck from Seller to CreditAgency;
 
-choicefrom CreditAgency to Seller {
-    CreditRefused:
-    
     CreditOk:
-}</programlisting>
-      </informalexample>
-      <para>Another example is,</para>
-      <informalexample>
-        <programlisting>Order from Buyer to Broker;
+}]]></programlisting>
+        </informalexample>
+        <para>Another example is,</para>
+        <informalexample>
+          <programlisting role="XML" ><![CDATA[Order from Buyer to Broker;
 
-choicefrom Broker to Buyer {
+from Broker to Buyer {
     validProduct():
         Order from Broker to Supplier;
         Confirmation from Supplier to Broker;
         OrderDetails from Broker to Buyer;
 
     invalidProduct(UnknownProduct):
-}</programlisting>
-      </informalexample>
-      <para>
-        In this example, the first choice path defines a message signature with only a label (or
+}]]></programlisting>
+        </informalexample>
+        <para>
+          In this example, the first choice path defines a message signature with only a label (or
+          
+          operation name), and the second choice path uses the operation name/parameters style of message signature.
+        </para>
+      </section>
+      <section id="sid-2195712_Choice-LocatedChoice">
         
-        operation name). The significance of this is that, depending upon the message transport
-        
-        being used, this label may not be carried from the
-        <emphasis role="italics">Broker</emphasis>
-        to
-        
-        the
-        <emphasis role="italics">Buyer</emphasis>
-        . The possible scenarios are:
-      </para>
-      <itemizedlist>
-        <listitem>
-          <para>
-            Label sent as a control message
-            
-            If supported by the message transport, the label can be immediately issued as an
-            
-            RPC operation with no message content.
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            Label piggy backed on next relevant message
-            
-            If the transport is message based, as opposed to RPC based, then the next message
-            
-            carried from the
-            <emphasis role="italics">Broker</emphasis>
-            to
-            <emphasis role="italics">Buyer</emphasis>
-            can
-            
-            include some additional metadata to define the label.
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            Label is ignored
-            
-            If the transport is message based, then it is possible to use the next message
-            
-            between the
-            <emphasis role="italics">Broker</emphasis>
-            and
-            <emphasis role="italics">Buyer</emphasis>
-            to determine
-            
-            which path has been taken. In the example above, the first path would be distinguished
-            
-            based on observing the
-            <emphasis role="italics">OrderDetails</emphasis>
-            message, and the second path
-            
-            the
-            <emphasis role="italics">UnknownProduct</emphasis>
-            message.
-          </para>
-        </listitem>
-      </itemizedlist>
+        <title>Located Choice</title>
+        <para>
+          The syntax for the
+          <emphasis role="italics">directed</emphasis>
+          <emphasis role="italics">choice</emphasis>
+          construct is:
+        </para>
+        <informalexample>
+          <programlisting role="XML" ><![CDATA[choice at <Role> "{"
+    ....
+"}" or "{"
+    ....
+"}"]]></programlisting>
+        </informalexample>
+        <para>For example,</para>
+        <informalexample>
+          <programlisting role="XML" ><![CDATA[CreditCheck from Seller to CreditAgency;
+
+choice CreditAgency to Seller {
+    CreditRefused from CreditAgency to Seller;
+} or {
+    CreditOk from CreditAgency to Seller;
+}]]></programlisting>
+        </informalexample>
+        <para>Another example is,Order from Buyer to Broker;</para>
+        <informalexample>
+          <programlisting role="XML" ><![CDATA[choice at Broker {
+    Order from Broker to Supplier;
+    Confirmation from Supplier to Broker;
+    OrderDetails from Broker to Buyer;
+} or {
+    invalidProduct(UnknownProduct) Broker to Buyer;
+}]]></programlisting>
+        </informalexample>
+        <para>This example demonstrates one of the main distinctions between the directed and located choice constructs. The direct choice defines the source and destination roles, and each path of the choice construct must send a message between those roles.</para>
+        <para>
+          In the located choice, as shown in the example above, only the source role is defined, which means that each choice path has the flexibility to send messages to different destination roles. So in the example above, it means that the
+          <emphasis role="italics">Broker</emphasis>
+          can communicate with the
+          <emphasis role="italics">Supplier</emphasis>
+          before it has to respond back to the
+          <emphasis role="italics">Buyer</emphasis>
+          - whereas with the directed choice version of the example, a message needed to be sent back to the
+          <emphasis role="italics">Buyer</emphasis>
+          before communicating with the
+          <emphasis role="italics">Supplier</emphasis>
+          .
+        </para>
+      </section>
     </section>
     <section id="sid-2195713">
       
       <title>Parallel</title>
       <para>
         The
-        <emphasis role="italics">par</emphasis>
-        construct defines a set of paths
-        
-        that represent behaviour that should occur concurrently.
+        <emphasis role="italics">parallel</emphasis>
+        construct defines a set of paths that represent behaviour that should occur concurrently.
       </para>
       <para>
         The syntax for the
-        <emphasis role="italics">par</emphasis>
+        <emphasis role="italics">parallel</emphasis>
         construct is:
       </para>
       <informalexample>
-        <programlisting>par "{"
+        <programlisting role="XML" ><![CDATA[parallel "{"
     ...
 ( "}" and "{"
     ... )+
-"}"</programlisting>
+"}"]]></programlisting>
       </informalexample>
       <para>For example,</para>
       <informalexample>
-        <programlisting>par {
+        <programlisting role="XML" ><![CDATA[parallel {
     CheckStock from Seller to Wholesaler;
     StockAvailability from Wholesaler to Seller;
 } and {
     CreditCheck from Seller to CreditAgency;
     CreditReport from CreditAgency to Seller;
-}</programlisting>
+}]]></programlisting>
       </informalexample>
     </section>
     <section id="sid-2195714">
@@ -456,9 +439,7 @@ choicefrom Broker to Buyer {
       <para>
         The
         <emphasis role="italics">unordered</emphasis>
-        construct defines a set of statements
-        
-        that represent behaviour that should occur in any order.
+        construct defines a set of statements that represent behaviour that should occur in any order.
       </para>
       <para>
         The syntax for the
@@ -466,16 +447,16 @@ choicefrom Broker to Buyer {
         construct is:
       </para>
       <informalexample>
-        <programlisting>unordered "{"
+        <programlisting role="XML" ><![CDATA[unordered "{"
     ...
-"}"</programlisting>
+"}"]]></programlisting>
       </informalexample>
       <para>For example,</para>
       <informalexample>
-        <programlisting>unordered {
+        <programlisting role="XML" ><![CDATA[unordered {
     CheckStock from Seller to Wholesaler;
     CreditCheck from Seller to CreditAgency;
-}</programlisting>
+}]]></programlisting>
       </informalexample>
     </section>
     <section id="sid-2195715">
@@ -503,15 +484,17 @@ choicefrom Broker to Buyer {
         construct is:
       </para>
       <informalexample>
-        <programlisting>repeat "@" &lt;Role&gt; { "," &lt;Role&gt; }* "{"
+        <programlisting role="XML" ><![CDATA[repeat at <Role> { "," <Role> }* "{"
     ...
-"}"</programlisting>
+"}"]]></programlisting>
       </informalexample>
       <para>
         The following example shows a repeat construct, located at the
         
         <emphasis role="italics">Buyer</emphasis>
-        role. This means that the Buyer will
+        role. This means that the
+        <emphasis role="italics">Buyer</emphasis>
+        will
         
         be responsible for deciding when to iterate, and when to terminate
         
@@ -520,7 +503,9 @@ choicefrom Broker to Buyer {
       <para>
         It also means that the initial activity (in this case interaction)
         
-        defined within the repeat construct must be initiated by the Buyer.
+        defined within the repeat construct must be initiated by the
+        <emphasis role="italics">Buyer</emphasis>
+        .
         
         In this case, the
         <emphasis role="italics">Buyer</emphasis>
@@ -532,10 +517,10 @@ choicefrom Broker to Buyer {
         .
       </para>
       <informalexample>
-        <programlisting>repeat @ Buyer {
+        <programlisting role="XML" ><![CDATA[repeat at Buyer {
     Order from Buyer to Seller;
     Invoice from Seller to Buyer;
-}</programlisting>
+}]]></programlisting>
       </informalexample>
     </section>
     <section id="sid-2195716">
@@ -557,10 +542,10 @@ choicefrom Broker to Buyer {
         associated.
       </para>
       <informalexample>
-        <programlisting>rec &lt;Label&gt; "{"
+        <programlisting role="XML" ><![CDATA[rec <Label> "{"
     ...
-    &lt;Label&gt; ";"
-"}"</programlisting>
+    <Label> ";"
+"}"]]></programlisting>
       </informalexample>
       <para>
         The following example shows a recursion construct defined using the
@@ -570,10 +555,10 @@ choicefrom Broker to Buyer {
         triggered by the 'Transaction' clause.
       </para>
       <informalexample>
-        <programlisting>rec Transaction {
+        <programlisting role="XML" ><![CDATA[rec Transaction {
     ...
 	Transaction;
-}</programlisting>
+}]]></programlisting>
       </informalexample>
     </section>
     <section id="sid-2195717">
@@ -582,11 +567,7 @@ choicefrom Broker to Buyer {
       <para>
         The 'global escape' concept provides a means for breaking out of a particular
         
-        scope based on an interaction. It is similar to the structure of a try/catch
-        
-        mechanism used in traditional programming languages for dealing with exceptions,
-        
-        and therefore the same construct has been used.
+        scope based on an interaction.
       </para>
       <para>
         The syntax for the
@@ -594,15 +575,16 @@ choicefrom Broker to Buyer {
         construct is:
       </para>
       <informalexample>
-        <programlisting>try "{"
+        <programlisting role="XML" ><![CDATA[do "{"
 	...
-( "}" catch "(" &lt;MessageSignature&gt; from &lt;Role&gt; to &lt;Role&gt; ")" "{"
-	... )+
-"}"</programlisting>
+( "}" interrupt "{"
+	...
+)+
+"}"]]></programlisting>
       </informalexample>
       <para>
         In the following example, the body of the
-        <emphasis role="italics">try</emphasis>
+        <emphasis role="italics">do</emphasis>
         block is enacted,
         
         involving an interaction between a
@@ -621,7 +603,7 @@ choicefrom Broker to Buyer {
         <emphasis role="italics">OutOfStock</emphasis>
         message, then it will cause the flow of control to
         
-        move to the first catch block. However if the
+        move to the first interrupt block. However if the
         <emphasis role="italics">Buyer</emphasis>
         sends an
         
@@ -630,18 +612,23 @@ choicefrom Broker to Buyer {
         <emphasis role="italics">OrderCancelled</emphasis>
         message,
         
-        then the flow will move to the second catch block.
+        then the flow will move to the second interrupt block.
       </para>
       <informalexample>
-        <programlisting>try {
-	Order from Buyer to Seller;
+        <programlisting role="XML" ><![CDATA[do {
+    Order from Buyer to Seller;
+    ...
+} interrupt {
+    OutOfStock from Seller to Buyer;
 	...
-} catch (OutOfStock from Seller to Buyer) {
-	...
-} catch (expire(OrderExpired) from Buyer to Seller 
-				| OrderCancelled from Buyer to Seller) {
-	...
-}</programlisting>
+} interrupt {
+    choice at Buyer {
+        expire(OrderExpired) from Buyer to Seller;
+    } or {
+        OrderCancelled from Buyer to Seller);
+    }
+    ...
+}]]></programlisting>
       </informalexample>
     </section>
     <section id="sid-2195718">
@@ -665,7 +652,7 @@ choicefrom Broker to Buyer {
         
         can proceed.
       </para>
-      <para>There are three ways in which another protocol can be composed. These are:</para>
+      <para>There are two ways in which another protocol can be composed. These are:</para>
       <itemizedlist>
         <listitem>
           <para>
@@ -687,54 +674,33 @@ choicefrom Broker to Buyer {
             composing protocol.
           </para>
         </listitem>
-        <listitem>
-          <para>
-            Inline
-            
-            The inline option defines an anonymous protocol.
-            
-            The syntax for the nested and external
-            <emphasis role="italics">run</emphasis>
-            construct is:
-          </para>
-        </listitem>
       </itemizedlist>
+      <para>
+        The syntax for the nested and external
+        <emphasis role="italics">run</emphasis>
+        construct is:
+      </para>
       <informalexample>
-        <programlisting>run &lt;ProtocolName&gt;
-			[ "(" &lt;param&gt; ( "," &lt;param&gt; )* ")" ] "{"
-    ...
-"}"</programlisting>
+        <programlisting role="XML" ><![CDATA[run <ProtocolName> "(" <param> ( "," <param> )* ")" at <Role>;]]></programlisting>
       </informalexample>
       <para>
-        An example of the internal variation, using the
+        An example of the nested variation, using the
         <emphasis role="italics">run</emphasis>
         , is:
       </para>
       <informalexample>
-        <programlisting>role Client, Supplier;
-....
-run PlaceOrder(Client, Supplier);
+        <programlisting role="XML" ><![CDATA[run PlaceOrder(Client, Supplier) at Client;
 ....
 protocol PlaceOrder(role Buyer, role Seller) {
     ....
-}</programlisting>
+}]]></programlisting>
       </informalexample>
       <para>
-        The external variation is similar to the internal variation above, except
+        The external variation is similar to the nested variation above, except
         
         that the composed protocol definition (i.e. PlaceOrder in this case), would
         
         be stored in a separate definition.
       </para>
-      <para>
-        The syntax for the inline
-        <emphasis role="italics">run</emphasis>
-        construct is:
-      </para>
-      <informalexample>
-        <programlisting>runprotocol "{"
-    ...
-"}"</programlisting>
-      </informalexample>
     </section>
   </chapter>

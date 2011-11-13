@@ -14,25 +14,24 @@
       <para>
         This example shows how a
         <emphasis role="italics">Buyer</emphasis>
-        participant and
+        role and
         
         <emphasis role="italics">Seller</emphasis>
-        participant may interact in an ordering
+        role may interact in an ordering
         
         process.
       </para>
       <informalexample>
-        <programlisting>protocol BuyerSeller {
-    role Buyer, Seller;
-    
+        <programlisting>protocol BuyerSeller (role Buyer) {
+    Buyer introduces Seller;
+
     Order from Buyer to Seller;
-    
-    choicefrom Seller to Buyer; {
-        Invoice {
-        }
-        Rejected {
-        }
-	}
+
+    choice at Seller {
+        Invoice from Seller to Buyer;
+    } or {
+        Rejected from Seller to Buyer;
+    }
 }</programlisting>
       </informalexample>
     </section>
@@ -49,16 +48,15 @@
         role.
       </para>
       <informalexample>
-        <programlisting>protocol CreditCheck {
-    role Client, CreditAgency;
-    
+        <programlisting>protocol CreditCheck (role Client) {
+    Client introduces CreditAgency;
+
     CheckCredit from Client to CreditAgency;
-    
-    choicefrom CreditAgency to Client {
-        CreditOk {
-        }
-        NoCredit {
-        }
+
+    choice at CreditAgency {
+        CreditOk from CreditAgency to Client;
+    } or {
+        NoCredit from CreditAgency to Client;
     }
 }</programlisting>
       </informalexample>
@@ -72,20 +70,21 @@
         previous two protocol examples.
       </para>
       <informalexample>
-        <programlisting>protocol BuyerSellerCreditCheck {
-    role Buyer, Seller, CreditAgency;
-    
+        <programlisting>protocol BuyerSellerCreditCheck (role Buyer) {
+    Buyer introduces Seller;
+
     Order from Buyer to Seller;
-    
+
+    Seller introduces CreditAgency;
+
     CheckCredit from Seller to CreditAgency;
-    
-    choicefrom CreditAgency to Seller {
-        CreditOk {
-        	Invoice from Seller to Buyer;
-        }
-        NoCredit {
-        	Rejected from Seller to Buyer;
-        }
+
+    choice at CreditAgency {
+        CreditOk from CreditAgency to Seller;
+        Invoice from Seller to Buyer;
+    } or {
+        NoCredit from CreditAgency to Seller;
+        Rejected from Seller to Buyer;
     }
 }</programlisting>
       </informalexample>
