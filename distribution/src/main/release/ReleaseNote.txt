@@ -1,3 +1,12 @@
+Scribble 2.0.0.CR3
+==================
+
+This is the (hopefully) final candidate release. It is a bug fix release, and includes
+the updated Protocol Guide to reflect the Scribble Protocol Type syntax version 1.
+
+The details for this release can be found here:
+https://issues.jboss.org/secure/ReleaseNote.jspa?projectId=12311020&version=12318297
+
 Scribble 2.0.0.CR1
 ==================
 
