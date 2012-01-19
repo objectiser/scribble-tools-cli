@@ -68,4 +68,20 @@
 		</pluginManagement>
 	</build>
 
+	<repositories>
+	    <repository>
+	        <id>jboss-developer-repository-group</id>
+	        <name>JBoss Developer Maven Repository Group</name>
+		<url>https://repository.jboss.org/nexus/content/groups/developer/</url>
+		<releases>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</releases>
+		<snapshots>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</snapshots>
+	    </repository>
+	</repositories>
+
 </project>
